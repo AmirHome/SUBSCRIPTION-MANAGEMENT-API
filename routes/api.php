@@ -24,3 +24,12 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1'], functi
 
 
 });
+
+
+Route::group(['prefix' => 'mock', 'as' => 'api.', 'namespace' => 'Mock'], function () {
+
+    Route::post('google/verification', 'GoogleReceiptVerificationController@verification');
+    Route::post('apple/verification', 'AppleReceiptVerificationController@verification');
+
+
+});
