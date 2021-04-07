@@ -21,7 +21,7 @@ class AppleReceiptVerificationController extends Controller
         } else {
             $result = ['status'=>false];
         }
-
+        sleep(15);
         return response()->json($result, 200);
     }
 }

@@ -22,7 +22,8 @@ class GoogleReceiptVerificationController extends Controller
         } else {
             $result = ['status'=>false];
         }
-
+        sleep(1);
         return response()->json($result, 200);
     }
+
 }

@@ -20,6 +20,9 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1'], functi
 
     Route::group( ['middleware' => ['auth:sanctum']], function(){
 
+        Route::post('purchase', 'SubscriptionController@store');
+        Route::post('check_subscription', 'SubscriptionController@view');
+
     });
 
 
@@ -30,6 +33,4 @@ Route::group(['prefix' => 'mock', 'as' => 'api.', 'namespace' => 'Mock'], functi
 
     Route::post('google/verification', 'GoogleReceiptVerificationController@verification');
     Route::post('apple/verification', 'AppleReceiptVerificationController@verification');
-
-
 });
