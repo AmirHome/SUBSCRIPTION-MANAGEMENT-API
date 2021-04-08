@@ -2,55 +2,36 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Helper\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSubscriptionRequest;
 use App\Http\Resources\SubscriptionResource;
 use App\Models\Device;
 use App\Models\Subscription;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 
 class SubscriptionController extends Controller
 {
     public function store(Request $request)
     {
 
-        $response =  Http::timeout(30)
-                            ->asForm()
-                            ->post('http://tek.loc/api/mock/google/verification',
-                                ['receipt' => $request->input('receipt')]
-                              )
-                            ->throw(function ($response, $e) {
-                                return response()->json([
-                                    'status' => false,
-                                    'error' => $e,
-                                ]);
-                            })
-                    ;
-        if($response->successful()){
-            if ($response->json('status')){
+        $response = Helper::mockGoogleVerification($request->input('receipt'));
 
-                $expireDate = $response->json('expire_date');
+        if ($response->successful()) {
+            if ($response->json('status')) {
 
                 $data = ['device_id' => $request->user()->id, // Retrieve Device ID by Token
-                         'receipt' => $request->input('receipt'),
-                         'status' => 'started',
-                         'expire_date' => $expireDate ,
-                        ];
+                    'receipt' => $request->input('receipt'),
+                    'status' => 'started',
+                    'expire_date' => $response->json('expire_date'),
+                ];
 
-                $request = new StoreSubscriptionRequest($data);
-                $validator = Validator::make($data, $request->rules());
-                if ($validator->fails()) {
-                    return $validator->errors();
-                }
-                $dataKeys = $validator->validated();
-                $data = array_splice($dataKeys,2);
+                $data = $this->validateData($data);
 
-                $subscription = Subscription::updateOrCreate($dataKeys, $data);
+                $subscription = $this->updateOrCreateSubscription($data);
+
                 return (new SubscriptionResource($subscription))
                     ->response()
                     ->setStatusCode(Response::HTTP_CREATED);
@@ -58,7 +39,8 @@ class SubscriptionController extends Controller
         }
     }
 
-    public function view(Request $request) {
+    public function view(Request $request)
+    {
 
         $deviceId = $request->user()->id; // Retrieve Device ID by Token
 
@@ -67,11 +49,27 @@ class SubscriptionController extends Controller
         $subscription = ['device_id' => $deviceId,
             'receipt' => $device->subscription->receipt,
             'status' => $device->subscription->status,
-            'expire_date' => $device->subscription->expire_date ,
+            'expire_date' => $device->subscription->expire_date,
         ];
 
         return (new SubscriptionResource($subscription))
             ->response()
             ->setStatusCode(Response::HTTP_CREATED);
+    }
+
+    public function validateData($data)
+    {
+        $request = new StoreSubscriptionRequest($data);
+        $validator = Validator::make($data, $request->rules());
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+        return $validator->validated();
+    }
+
+    public function updateOrCreateSubscription($data): Subscription
+    {
+        $values = array_splice($data, 2);
+        return Subscription::updateOrCreate($data, $values);
     }
 }
