@@ -17,7 +17,8 @@ class CreateSubscriptionsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('device_id');
             $table->string('receipt');
-            $table->tinyInteger('status');
+//            $table->tinyInteger('status');
+            $table->enum('status', ['started', 'renewed', 'canceled', 'expired']);
             $table->dateTime('expire_date');
             $table->timestamps();
 

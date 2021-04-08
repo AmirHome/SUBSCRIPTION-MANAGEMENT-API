@@ -38,7 +38,7 @@ class SubscriptionController extends Controller
 
                 $data = ['device_id' => $request->user()->id, // Retrieve Device ID by Token
                          'receipt' => $request->input('receipt'),
-                         'status' => true,
+                         'status' => 'started',
                          'expire_date' => $expireDate ,
                         ];
 

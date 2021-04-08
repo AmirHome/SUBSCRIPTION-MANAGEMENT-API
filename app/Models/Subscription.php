@@ -14,7 +14,7 @@ class Subscription extends Model
     protected $fillable = [
         'device_id',
         'receipt',
-        'status',
+        'status', //enum('started', 'renewed', 'canceled', 'expired');
         'expire_date',
         'created_at',
         'updated_at',

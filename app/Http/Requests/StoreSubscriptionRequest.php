@@ -24,7 +24,6 @@ class StoreSubscriptionRequest extends FormRequest
                 'required',
             ],
             'status'  => [
-                'integer',
                 'required',
             ],
             'expire_date'     => [
