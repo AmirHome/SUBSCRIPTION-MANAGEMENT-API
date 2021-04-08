@@ -21,42 +21,42 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-## Learning Laravel
+## API
+### POST Register
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- http://tek.loc/api/v1/register
+- BODY formdata
+-     Params : ['uID' => '12345678','appID' => '1234567','lang' => 'en','os' => 'Android']
+-     Response : {"data":{"u_id":"12345678","app_id":"1234567","lang":"en","os":"Android","updated_at":"2021-04-08T14:58:34.000000Z","created_at":"2021-04-08T14:58:34.000000Z"},"client_token":Token}
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### POST purchase
 
-## Laravel Sponsors
+- http://tek.loc/api/v1/purchase
+- AUTHORIZATION Bearer Token
+- BODY formdata
+-     Params : ['receipt' => '1A2B3']
+-     Response : {"data":{"device_id":2,"receipt":"1A2B3","status":"started","expire_date":"2021-05-08 17:04:19","created_at":"2021-04-08T14:58:45.000000Z","updated_at":"2021-04-08T17:04:20.000000Z"}}
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+### POST Check Subscriptoin
 
-### Premium Partners
+- http://tek.loc/api/v1/check_subscription
+- AUTHORIZATION Bearer Token
+-     Response : {"data":{"device_id":2,"receipt":"1A2B3","status":"started","expire_date":"2021-05-08 14:58:44"}}
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/)**
-- **[OP.GG](https://op.gg)**
+### POST Google Mock Verification
 
-## Contributing
+- http://tek.loc/api/mock/google/verification
+- BODY formdata
+-     Params : ['receipt' => '1A2B3']
+-     Response : {"status":true,"expire_date":"2021-05-08 20:02:29"}
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### POST Apple Mock Verification
 
-## Code of Conduct
+- http://tek.loc/api/mock/apple/verification
+- BODY formdata
+-     Params : ['receipt' => '1A2B3']
+-     Response : {"status":true,"expire_date":"2021-05-08 20:02:29"}
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Worker
+Command php artisan:
+-     subscription:verify_expired
