@@ -58,4 +58,20 @@ class SubscriptionController extends Controller
         }
     }
 
+    public function view(Request $request) {
+
+        $deviceId = $request->user()->id; // Retrieve Device ID by Token
+
+        $device = Device::where('id', $deviceId)->with('subscription')->first();
+
+        $subscription = ['device_id' => $deviceId,
+            'receipt' => $device->subscription->receipt,
+            'status' => $device->subscription->status,
+            'expire_date' => $device->subscription->expire_date ,
+        ];
+
+        return (new SubscriptionResource($subscription))
+            ->response()
+            ->setStatusCode(Response::HTTP_CREATED);
+    }
 }

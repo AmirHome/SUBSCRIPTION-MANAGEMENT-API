@@ -24,4 +24,8 @@ class Subscription extends Model
     protected $hidden = [
         'id'
     ];
+
+    public function device(){
+        return $this->belongsTo(Device::class, 'device_id', 'id');
+    }
 }

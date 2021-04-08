@@ -25,4 +25,8 @@ class Device extends Model
     protected $hidden = [
         'id'
     ];
+
+    public function subscription(){
+        return $this->hasOne(Subscription::class, 'device_id', 'id');
+    }
 }

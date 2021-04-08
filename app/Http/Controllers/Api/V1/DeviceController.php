@@ -16,9 +16,12 @@ class DeviceController extends Controller
 
     public function store(StoreDeviceRequest $request)
     {
-        $device = Device::create($request->validated());
+        $device = Device::firstOrCreate($request->validated());
 
+        $device->tokens()->delete();
         $token = $device->createToken('auth-token')->plainTextToken;
+
+        // [$id, $token] = explode('|', $token, 2);
 
         return (new DeviceResource($device))
                 ->passToken([$token])
